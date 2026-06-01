@@ -1307,7 +1307,7 @@
 
     @media (max-width: 768px) {
       :root {
-        --margin:      12px;
+        --margin:      24px;
         --section-py:  72px;
       }
       .company-module__img  { aspect-ratio: unset; }
@@ -1315,9 +1315,35 @@
       .site-header__menu-btn { display: flex; }
       .home-grid__row1       { grid-template-columns: 1fr 1fr; }
       .home-grid__intro      { grid-column: 1 / -1; }
-      #reading-now-row1 > article:first-of-type { grid-column: 1 / -1; }
-      #reading-now-row1 > article:nth-of-type(2) .card__time,
-      #reading-now-row1 > article:nth-of-type(3) .card__time { display: none; }
+      /* Per Ana Maria's mobile spec for /home Reading Now row 1:
+         - First card spans full width (one big card)
+         - Cards 2 and 3 sit side-by-side in a 2-column row.
+         NOTE: cards are rendered as <button style="all:unset; ...">. The
+         inline `all: unset` resets `grid-column` and `order` to their
+         initial values, so we MUST use !important here to win over the
+         inline style. Otherwise card 1 never spans full width and the
+         row-2 reorder never happens. */
+      .home-grid__row1 .card:nth-child(1) { grid-column: 1 / -1 !important; }
+      /* Cards 2 and 3 share a row — make their bottoms align even when their
+         titles differ in line count by reserving 2 lines of title height.
+         Also hide the read-time eyebrow on these two so the meta row stays
+         clean (per Ana Maria's mobile spec). */
+      .home-grid__row1 .card:nth-child(2) .card__title,
+      .home-grid__row1 .card:nth-child(3) .card__title {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        min-height: calc(var(--t-nav) * 1.45 * 2);
+      }
+      .home-grid__row1 .card .card__read-time { display: none; }
+      /* Row 2 (featured): on mobile, the text panel + CTA must come BEFORE
+         the image, so the reader sees title/excerpt/button first and the
+         image second. CSS `order` flips the visual order without touching
+         the DOM. Need !important on the .card--feat because of the inline
+         `all: unset` on the button (see comment above). */
+      .home-grid__row2 .card--feat { order: 2 !important; }
+      .home-grid__row2 .featured-text { order: 1; }
       .home-grid__row2       { margin-top: 48px; }
       .card--feat .card__img { aspect-ratio: 3/4; }
       .featured-text         { padding: 28px 0 0; }
@@ -1537,9 +1563,20 @@
       padding-right: 10px;
       white-space: nowrap;
     }
-    .ca-cell { height: 28px; border-radius: 3px; position: relative; }
+    .ca-cell { height: 28px; border-radius: 3px; position: relative; display: block; text-decoration: none; color: inherit; }
     .ca-cell.hoverable { cursor: pointer; }
     .ca-cell.hoverable:hover { transform: scale(1.08); z-index: 5; transition: transform 0.1s; }
+    /* Row labels: when there is a Sanity regulation, the label becomes a link.
+       Keep the original look (no blue, no underline) and add a subtle hover. */
+    a.ca-row-label--link {
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+      transition: color 0.15s ease;
+    }
+    a.ca-row-label--link:hover { color: var(--accent, #5B21B6); }
+    a.ca-cell { cursor: pointer; }
+    a.ca-cell--linked:hover { opacity: 0.85; transition: opacity 0.12s; }
     .ca-cell.inactive { background: rgba(0,0,0,0.03) !important; border: 0.5px solid rgba(0,0,0,0.07) !important; }
     .ca-tooltip {
       position: absolute;
@@ -2243,7 +2280,7 @@
     /* Value chain map page */
     .vc-map-page { padding-top: var(--header-h); }
     .vc-map-header {
-      padding: 80px var(--margin) 60px;
+      padding: 80px var(--margin) 24px;
       display: grid;
       grid-template-columns: 1fr 600px;
       gap: 48px;
@@ -2771,7 +2808,7 @@ html.scroll-fade-ready [data-text-fade].is-revealed {
    Cards + SVG share an exact 1440px column grid so each card centre aligns
    with its corresponding cluster of circles in the SVG underneath. */
 @media (max-width: 768px) {
-  .lc-mobile-view { padding-top: 32px; }
+  .lc-mobile-view { padding-top: 8px; }
   .lc-mobile-scroll { padding-left: 16px; }
   .lc-mobile-scroll > .vcc-flow.lc-cards-mobile {
     /* Override the flex 222px-per-card layout with a strict 7-equal-column
@@ -2851,3 +2888,76 @@ html.scroll-fade-ready [data-text-fade].is-revealed {
   }
   .jobs-filter-row__label { padding-top: 0; }
 }
+
+/* ============================================================
+   MOBILE: justify body text (excludes titles, eyebrows, graphics).
+   Per Ana Maria's spec — mobile-only, applied to every page.
+============================================================ */
+@media (max-width: 768px) {
+  /* Body / prose paragraphs ----------------------------------- */
+  .hero__body,
+  .home-grid__intro-body,
+  .company-module__body,
+  .section__subhead,
+  .vc-caption,
+  .detail-body__prose,
+  .detail-body p,
+  .article-page__lead,
+  .article-page__text,
+  .article-page__body p,
+  .article-page__pullquote,
+  .prose-hero__subhead,
+  .prose-section__body,
+  .prose-section__body p,
+  .featured-text__excerpt,
+  .card__excerpt,
+  .card__dek,
+  .company-card__model,
+  .company-profile__tagline,
+  .company-profile__body,
+  .company-profile__body p,
+  .regulation-module__summary,
+  .regulation-module__full,
+  .newsletter-body,
+  .nl-feature__text,
+  .footer-tagline,
+  .job-item__description,
+  .reading-now__intro,
+  .reading-now__intro-body,
+  .modal__synopsis,
+  .modal__takeaway,
+  .vc-hero__caption,
+  .vc-hero__subhead,
+  .vc-node__blurb,
+  .reg-item__summary,
+  .method-note__body,
+  .about-form__sub,
+  .contact-left__intro,
+  .contact-left__text {
+    text-align: justify;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+  }
+}
+
+/* ============================================================
+   IN-PAGE ANCHOR OFFSET
+   When the user clicks a sidebar link like "What it is" / "Who it
+   affects" / "Where things stand" on /regulation/[slug], or a section
+   anchor on /companies/[slug] or /value-chain/[slug], the browser
+   scrolls the target to y=0 of the viewport. Our header is fixed at
+   the top, so the section heading lands BEHIND it. `scroll-margin-top`
+   tells the scroller to leave that much space above the target.
+   Applies site-wide on all section anchors. The 24 px extra is so the
+   heading sits visibly under the header rather than kissing it.
+============================================================ */
+.detail-body__section,
+[id^="reg-section-"],
+[id^="co-section-"],
+[id^="vn-"] {
+  scroll-margin-top: calc(var(--header-h) + 24px);
+}
+
+
+
+/* Auto-deploy test: 2026-06-01T16:08:30Z */
