@@ -1,12 +1,18 @@
 'use client'
 
 /**
- * Global error boundary — caught here whenever a render throws. Keeps the
- * brand chrome around the error so the user has a path out (Home + Reload).
+ * Global error boundary — matches the 404 page's visual language.
+ * Reuses the .not-found-* class system from the prototype, with one
+ * structural variant: instead of the "404" numeral we show "500" (the
+ * standard HTTP server-error code), the lavender headline copy reads
+ * "Something went sideways." and the CTA gets a sibling "Try again"
+ * button that calls the reset() callback Next.js passes us.
+ *
+ * Lives at the app root so the (site) layout's header/footer don't
+ * render — same chrome-suppression behaviour as not-found.tsx.
  */
 import {useEffect} from 'react'
 import Link from 'next/link'
-import {routes} from '@/lib/routes'
 
 export default function ErrorBoundary({
   error,
@@ -16,41 +22,49 @@ export default function ErrorBoundary({
   reset: () => void
 }) {
   useEffect(() => {
-    // In production this is where you'd ship the error to Sentry/Logflare.
-    // For now, just log it — Vercel captures the stack in build logs anyway.
+    // Log so the issue surfaces in Vercel's runtime logs. Real-time
+    // monitoring (Sentry, Logflare) can be wired here later.
     console.error('Page render failed:', error)
   }, [error])
 
   return (
-    <div className="page-header" style={{minHeight: '60vh'}}>
-      <p className="section__label" style={{marginBottom: 24}}>
-        Something went wrong
-      </p>
-      <h1 className="page-header__heading" style={{maxWidth: 720}}>
-        We hit an unexpected error.
-      </h1>
-      <p
-        className="page-header__subhead"
-        style={{maxWidth: 640, marginTop: 16}}
-      >
-        Try reloading. If it keeps happening, write to{' '}
-        <a href="mailto:contact@pre-fall.com">contact@pre-fall.com</a> and we&apos;ll
-        sort it out.
-      </p>
-      <div
-        style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: 12,
-          marginTop: 32,
-        }}
-      >
-        <button type="button" onClick={reset} className="btn btn--primary">
-          ↻ Try again
-        </button>
-        <Link href={routes.home} className="btn btn--ghost">
-          ← Home
-        </Link>
+    <div className="not-found-page">
+      <div className="not-found__inner">
+        <span className="not-found__num">500</span>
+        <div className="not-found__text">
+          <p className="not-found__label">Something went wrong</p>
+          <h1 className="not-found__heading">
+            We hit an unexpected
+            <br />
+            snag on our end.
+          </h1>
+          <p className="not-found__body">
+            Try reloading the page. If it keeps happening, write to{' '}
+            <a
+              href="mailto:contact@pre-fall.com"
+              style={{color: 'inherit', textDecoration: 'underline'}}
+            >
+              contact@pre-fall.com
+            </a>{' '}
+            and we&apos;ll sort it out.
+          </p>
+          <div style={{display: 'flex', gap: 12, flexWrap: 'wrap'}}>
+            <button
+              type="button"
+              onClick={reset}
+              className="not-found__cta"
+            >
+              Try again ↻
+            </button>
+            <Link
+              href="/"
+              className="not-found__cta"
+              style={{background: 'transparent', color: 'var(--ink)', border: '1px solid var(--ink)'}}
+            >
+              Back to Prefall →
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   )
