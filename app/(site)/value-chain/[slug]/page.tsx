@@ -37,9 +37,27 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
     tags: [`node:${slug}`],
   })
   if (!data?.node) return {title: 'Value chain — Prefall'}
+  const title = `${data.node.title} — Value chain`
+  const description =
+    data.node.shortBlurb ??
+    data.node.heroSummary ??
+    `The economics of ${data.node.title.toLowerCase()} across the fashion value chain.`
+  const url = `https://pre-fall.com/value-chain/${slug}`
   return {
-    title: `${data.node.title} — Value chain — Prefall`,
-    description: data.node.shortBlurb ?? data.node.heroSummary ?? undefined,
+    title,
+    description,
+    alternates: {canonical: url},
+    openGraph: {
+      type: 'article',
+      url,
+      title,
+      description,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+    },
   }
 }
 

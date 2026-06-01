@@ -24,15 +24,32 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({params}: Props): Promise<Metadata> {
   const {slug} = await params
-  const c = await sanityFetch<{name: string; tagline?: string} | null>({
+  const c = await sanityFetch<{name: string; tagline?: string; businessModelSummary?: string; logo?: any} | null>({
     query: companyBySlugQuery,
     params: {slug},
     tags: [`company:${slug}`],
   })
   if (!c) return {title: 'Company — Prefall'}
+  const description = c.tagline ?? c.businessModelSummary ?? `Prefall's profile of ${c.name}.`
+  const url = `https://pre-fall.com/companies/${slug}`
+  const ogImage = c.logo ? urlFor(c.logo).width(1200).height(630).url() : null
   return {
-    title: `${c.name} — Prefall`,
-    description: c.tagline ?? undefined,
+    title: c.name,
+    description,
+    alternates: {canonical: url},
+    openGraph: {
+      type: 'profile',
+      url,
+      title: c.name,
+      description,
+      ...(ogImage ? {images: [{url: ogImage, width: 1200, height: 630, alt: c.name}]} : {}),
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: c.name,
+      description,
+      ...(ogImage ? {images: [ogImage]} : {}),
+    },
   }
 }
 

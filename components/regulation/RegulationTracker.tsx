@@ -18,6 +18,26 @@
  *   • omnibus    — 2026-only hatched overlay on CSRD / CSDDD
  */
 import {useEffect, useMemo, useRef, useState} from 'react'
+import Link from 'next/link'
+
+// Map of tracker instrument names → Sanity regulation slug. Lets us turn each
+// row label and each clickable cell into a deep link to the regulation page.
+const NAME_TO_SLUG: Record<string, string> = {
+  CSRD: 'csrd',
+  ESRS: 'esrs',
+  DPP: 'dpp',
+  'Textile label': 'textile',
+  'France score': 'france',
+  ECGT: 'ecgt',
+  'Green Claims': 'gcd',
+  CSDDD: 'csddd',
+  EUDR: 'eudr',
+  ESPR: 'espr',
+  'Italy bill': 'italy',
+  'Textile EPR': 'epr',
+  PPWR: 'ppwr',
+  'CA SB 707': 'sb707',
+}
 
 // Theme colours, copied verbatim from prototype line 6673.
 const TC: Record<string, string> = {
@@ -338,18 +358,36 @@ function RowFragment({
   color: string
   spacerAfter: boolean
 }) {
+  const slug = NAME_TO_SLUG[inst.name]
+  const label = slug ? (
+    <Link href={`/regulation/${slug}`} className="ca-row-label ca-row-label--link">
+      {inst.name}
+    </Link>
+  ) : (
+    <div className="ca-row-label">{inst.name}</div>
+  )
   return (
     <>
-      <div className="ca-row-label">{inst.name}</div>
+      {label}
       {YEARS.map((y) => (
-        <Cell key={y} inst={inst} year={y} color={color} />
+        <Cell key={y} inst={inst} year={y} color={color} slug={slug} />
       ))}
       {spacerAfter ? <div style={{gridColumn: '1/-1', height: '4px'}} /> : null}
     </>
   )
 }
 
-function Cell({inst, year, color}: {inst: Instrument; year: number; color: string}) {
+function Cell({
+  inst,
+  year,
+  color,
+  slug,
+}: {
+  inst: Instrument
+  year: number
+  color: string
+  slug: string | undefined
+}) {
   const isActive = inst.active.includes(year)
   if (!isActive) return <div className="ca-cell inactive" data-year={year} />
 
@@ -358,57 +396,57 @@ function Cell({inst, year, color}: {inst: Instrument; year: number; color: strin
   const isOmnibus =
     OMNIBUS_AFFECTED.includes(inst.name) && year === 2026 && !isEnforce && !isEvent
 
-  if (isEnforce) {
-    return (
+  // Wrap clickable cells in a Link so both the hover tooltip and the click
+  // navigation work. If a slug is missing for some reason, fall back to a div.
+  const wrap = (children: React.ReactNode, bg: string, border: string) =>
+    slug ? (
+      <Link
+        href={`/regulation/${slug}`}
+        className="ca-cell hoverable"
+        data-year={year}
+        data-color={color}
+        style={{background: bg, border}}
+      >
+        {children}
+      </Link>
+    ) : (
       <div
         className="ca-cell hoverable"
         data-year={year}
         data-color={color}
-        style={{
-          background: hexToRgba(color, 0.75),
-          border: `1px solid ${hexToRgba(color, 0.9)}`,
-        }}
+        style={{background: bg, border}}
       >
-        <div className="ca-tooltip">
-          <div className="ca-tooltip-name" style={{color}}>
-            {inst.name}
-          </div>
-          <div className="ca-tooltip-date">{inst.enforceLabel}</div>
-        </div>
+        {children}
       </div>
+    )
+
+  if (isEnforce) {
+    return wrap(
+      <div className="ca-tooltip">
+        <div className="ca-tooltip-name" style={{color}}>
+          {inst.name}
+        </div>
+        <div className="ca-tooltip-date">{inst.enforceLabel}</div>
+      </div>,
+      hexToRgba(color, 0.75),
+      `1px solid ${hexToRgba(color, 0.9)}`
     )
   }
   if (isEvent) {
-    return (
-      <div
-        className="ca-cell hoverable"
-        data-year={year}
-        data-color={color}
-        style={{
-          background: hexToRgba(color, 0.38),
-          border: `1px solid ${hexToRgba(color, 0.5)}`,
-        }}
-      >
-        <div className="ca-tooltip">
-          <div className="ca-tooltip-name" style={{color}}>
-            {inst.name}
-          </div>
-          <div className="ca-tooltip-date">{inst.eventLabel}</div>
+    return wrap(
+      <div className="ca-tooltip">
+        <div className="ca-tooltip-name" style={{color}}>
+          {inst.name}
         </div>
-      </div>
+        <div className="ca-tooltip-date">{inst.eventLabel}</div>
+      </div>,
+      hexToRgba(color, 0.38),
+      `1px solid ${hexToRgba(color, 0.5)}`
     )
   }
   if (isOmnibus) {
-    return (
-      <div
-        className="ca-cell hoverable"
-        data-year={year}
-        data-color={color}
-        style={{
-          background: hexToRgba(color, 0.1),
-          border: `1px solid ${hexToRgba(color, 0.18)}`,
-        }}
-      >
+    return wrap(
+      <>
         <div
           style={{
             position: 'absolute',
@@ -430,7 +468,25 @@ function Cell({inst, year, color}: {inst: Instrument; year: number; color: strin
             18 March 2026: scope of CSRD and CSDDD significantly reduced.
           </div>
         </div>
-      </div>
+      </>,
+      hexToRgba(color, 0.1),
+      `1px solid ${hexToRgba(color, 0.18)}`
+    )
+  }
+  // Plain active cell (no event, no enforcement) — still links to the
+  // regulation so the user can navigate from anywhere in the row.
+  const bg = hexToRgba(color, 0.1)
+  const border = `1px solid ${hexToRgba(color, 0.18)}`
+  if (slug) {
+    return (
+      <Link
+        href={`/regulation/${slug}`}
+        className="ca-cell ca-cell--linked"
+        data-year={year}
+        data-color={color}
+        style={{background: bg, border}}
+        aria-label={inst.name}
+      />
     )
   }
   return (
@@ -438,10 +494,7 @@ function Cell({inst, year, color}: {inst: Instrument; year: number; color: strin
       className="ca-cell"
       data-year={year}
       data-color={color}
-      style={{
-        background: hexToRgba(color, 0.1),
-        border: `1px solid ${hexToRgba(color, 0.18)}`,
-      }}
+      style={{background: bg, border}}
     />
   )
 }

@@ -33,9 +33,24 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
     tags: [`regulation:${slug}`],
   })
   if (!r) return {title: 'Regulation — Prefall'}
+  const title = r.fullName ? `${r.name} — ${r.fullName}` : r.name
+  const description = r.shortSummary ?? r.fullName ?? `Live tracker entry for ${r.name}.`
+  const url = `https://pre-fall.com/regulation/${slug}`
   return {
-    title: `${r.name} — Prefall`,
-    description: r.shortSummary ?? r.fullName ?? undefined,
+    title,
+    description,
+    alternates: {canonical: url},
+    openGraph: {
+      type: 'article',
+      url,
+      title,
+      description,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+    },
   }
 }
 

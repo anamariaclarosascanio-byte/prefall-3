@@ -28,7 +28,34 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
     tags: [`article:${slug}`],
   })
   if (!a) return {title: 'Article — Prefall'}
-  return {title: `${a.title} — Prefall`, description: a.dek ?? undefined}
+  const description =
+    a.dek ?? a.modalSynopsis ?? a.lead ?? 'An article on Prefall.'
+  const ogImage = a.heroImage
+    ? urlFor(a.heroImage).width(1200).height(630).url()
+    : a.cardImage
+      ? urlFor(a.cardImage).width(1200).height(630).url()
+      : null
+  const url = `https://pre-fall.com/articles/${slug}`
+  return {
+    title: a.title,
+    description,
+    alternates: {canonical: url},
+    openGraph: {
+      type: 'article',
+      url,
+      title: a.title,
+      description,
+      ...(ogImage ? {images: [{url: ogImage, width: 1200, height: 630, alt: a.title}]} : {}),
+      publishedTime: a.publishedAt ?? undefined,
+      authors: a.author ? [a.author] : ['Ana Maria Claros'],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: a.title,
+      description,
+      ...(ogImage ? {images: [ogImage]} : {}),
+    },
+  }
 }
 
 function formatDate(d?: string | null) {
@@ -59,8 +86,40 @@ export default async function ArticlePage({params}: Props) {
   // articles she didn't choose).
   const related = (article.relatedArticles ?? []) as any[]
 
+  // JSON-LD structured data — gives Google rich snippet eligibility
+  // (author, date, image, headline) for this article.
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: article.title,
+    description: article.dek ?? article.modalSynopsis ?? undefined,
+    image: article.heroImage
+      ? [urlFor(article.heroImage).width(1200).height(630).url()]
+      : undefined,
+    datePublished: article.publishedAt ?? undefined,
+    dateModified: article._updatedAt ?? article.publishedAt ?? undefined,
+    author: {
+      '@type': 'Person',
+      name: article.author ?? 'Ana Maria Claros',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Prefall',
+      url: 'https://pre-fall.com',
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `https://pre-fall.com/articles/${slug}`,
+    },
+  }
+
   return (
     <div className="article-page">
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{__html: JSON.stringify(jsonLd)}}
+      />
       <div className="article-page__header">
         {/* Back link + category tag inline (same flex row).
             Matches the prototype's detail-header__label pattern used on

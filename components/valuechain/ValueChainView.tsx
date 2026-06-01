@@ -121,10 +121,40 @@ export function ValueChainView({heading, subhead, hint, caption, nodes}: Props) 
     }, 220)
   }
 
+  // The staggered SVG entrance (left-to-right reveal of nodes + connectors)
+  // was driven by a fixed 800 ms setTimeout. Problem: on tall viewports the
+  // user has to scroll down to reach the map, and by then the animation has
+  // already finished off-screen — looking like it never fired. Switch to an
+  // IntersectionObserver tied to the SVG container so the animation triggers
+  // the moment the map enters the viewport (with a 50 ms breath so the
+  // initial layout settles). Falls back to the timer if IO is unavailable.
+  const lcWrapRef = useRef<HTMLDivElement | null>(null)
+  const mobileWrapRef = useRef<HTMLDivElement | null>(null)
   useEffect(() => {
-    const id = window.setTimeout(() => setAnimated(true), 800)
-    return () => window.clearTimeout(id)
-  }, [])
+    if (animated) return
+    if (typeof window === 'undefined') return
+    const targets = [lcWrapRef.current, mobileWrapRef.current].filter(
+      Boolean
+    ) as Element[]
+    if (targets.length === 0 || !('IntersectionObserver' in window)) {
+      const id = window.setTimeout(() => setAnimated(true), 800)
+      return () => window.clearTimeout(id)
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            window.setTimeout(() => setAnimated(true), 50)
+            io.disconnect()
+            return
+          }
+        }
+      },
+      {threshold: 0.15, rootMargin: '0px 0px -10% 0px'}
+    )
+    targets.forEach((t) => io.observe(t))
+    return () => io.disconnect()
+  }, [animated])
 
   // hintIdx: index of the layer button currently being "hinted" (cycling
   // animation that runs once on mount, prototype lines 5746-5759). The
@@ -220,7 +250,7 @@ export function ValueChainView({heading, subhead, hint, caption, nodes}: Props) 
           card copy is taken verbatim from prefall-prototype 1.html
           (lines 4702-4778) — these are short, design-locked summaries
           distinct from the longer node.shortBlurb shown on desktop. */}
-      <div className="lc-mobile-view">
+      <div className="lc-mobile-view" ref={mobileWrapRef}>
         <div className="lc-mobile-scroll">
           <div className="vcc-flow lc-cards-mobile">
             {MOBILE_CARDS.map((card) => (
@@ -269,7 +299,7 @@ export function ValueChainView({heading, subhead, hint, caption, nodes}: Props) 
         <LegendsTable layer={active} />
       </div>
 
-      <div className="lc-wrap">
+      <div className="lc-wrap" ref={lcWrapRef}>
         <div className="lc-svg-wrap">
           <nav className="vc-nodes lc-nodes-desktop" aria-label="Value chain nodes">
             {sortedNodes.map((n) => (
