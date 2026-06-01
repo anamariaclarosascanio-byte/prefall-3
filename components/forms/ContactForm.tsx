@@ -1,8 +1,16 @@
 'use client'
 
 /**
- * Contact form (About page) — front-end success state only (per launch
- * decision). Real delivery (Resend/Formspree) wired after launch.
+ * Contact form (About page) — posts to /api/contact, which uses Resend to
+ * email contact@pre-fall.com from noreply@send.pre-fall.com (DKIM-signed
+ * subdomain). The visitor's email goes in reply_to so Ana can reply
+ * directly from her inbox.
+ *
+ * Submission states:
+ *   • idle   — show form
+ *   • submitting — disable submit, show "Sending…"
+ *   • success — replace with the form-success block (icon + thank you)
+ *   • error  — keep form visible, show inline error above the button
  */
 import {useState} from 'react'
 
@@ -16,10 +24,30 @@ export function ContactForm({successTitle, successBody}: Props) {
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
   const [submitted, setSubmitted] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    setSubmitted(true)
+    if (submitting) return
+    setSubmitting(true)
+    setError(null)
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({name, email, message}),
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        throw new Error(data?.error || `Request failed (${res.status})`)
+      }
+      setSubmitted(true)
+    } catch (err: any) {
+      setError(err?.message || 'Something went wrong. Please try again.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   if (submitted) {
@@ -50,6 +78,7 @@ export function ContactForm({successTitle, successBody}: Props) {
           className="form-field__input"
           placeholder="Jane Doe"
           autoComplete="name"
+          disabled={submitting}
         />
       </div>
       <div className="form-field">
@@ -66,6 +95,7 @@ export function ContactForm({successTitle, successBody}: Props) {
           className="form-field__input"
           placeholder="jane@example.com"
           autoComplete="email"
+          disabled={submitting}
         />
       </div>
       <div className="form-field">
@@ -80,10 +110,27 @@ export function ContactForm({successTitle, successBody}: Props) {
           onChange={(e) => setMessage(e.target.value)}
           className="form-field__textarea"
           rows={5}
+          disabled={submitting}
         />
       </div>
-      <button type="submit" className="btn-contact-submit">
-        Send →
+      {error ? (
+        <p
+          role="alert"
+          style={{
+            fontSize: 13,
+            color: '#b91c1c',
+            margin: '0 0 12px',
+          }}
+        >
+          {error}
+        </p>
+      ) : null}
+      <button
+        type="submit"
+        className="btn-contact-submit"
+        disabled={submitting}
+      >
+        {submitting ? 'Sending…' : 'Send →'}
       </button>
     </form>
   )
