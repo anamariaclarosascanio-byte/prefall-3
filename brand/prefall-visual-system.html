@@ -37,32 +37,9 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* ── Sticky TOC (full bleed) ── */
-  .toc-strip {
-    position: sticky; top: 0; z-index: 10;
-    width: 100%; background: var(--white);
-    border-bottom: 1px solid var(--sep);
-  }
-  .toc-inner {
-    max-width: 1280px; margin: 0 auto;
-    padding: 14px var(--margin);
-    display: flex; align-items: baseline; gap: 22px; flex-wrap: wrap;
-  }
-  .toc-mark {
-    font-family: var(--font-logo);
-    font-size: 11px; font-weight: 500;
-    letter-spacing: 0.55em; text-transform: uppercase; color: var(--black);
-  }
-  .toc-strip a {
-    font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
-    color: var(--gray); text-decoration: none;
-  }
-  .toc-strip a:hover { color: var(--black); }
-
   /* ── Cover (full bleed) ── */
   .cover {
     width: 100%; background: var(--white);
-    border-bottom: 1px solid var(--sep);
   }
   .cover-inner {
     max-width: 1280px; margin: 0 auto;
@@ -100,31 +77,7 @@
     padding: 80px var(--margin) 120px;
   }
 
-  /* ── Doc header (top of body) ── */
-  .doc-header {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    padding-bottom: 32px;
-    margin-bottom: 64px;
-    border-bottom: 1px solid var(--sep);
-  }
-  .doc-title {
-    font-family: var(--font-logo);
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.55em;
-    text-transform: uppercase;
-    color: var(--black);
-  }
-  .doc-meta {
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--gray);
-  }
-
-  .section { margin-bottom: 80px; }
+  .section { margin-bottom: 96px; }
   .section-label {
     font-size: 9px;
     font-weight: 600;
@@ -132,12 +85,6 @@
     text-transform: uppercase;
     color: var(--gray);
     margin-bottom: 28px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
-  .section-label::after {
-    content: ''; flex: 1; height: 1px; background: var(--sep);
   }
 
   /* ── Typeface cards ── */
@@ -212,10 +159,8 @@
     grid-template-columns: 180px 1fr 160px;
     align-items: baseline;
     gap: 24px;
-    padding: 20px 0;
-    border-bottom: 1px solid var(--sep);
+    padding: 28px 0;
   }
-  .scale-row:first-child { border-top: 1px solid var(--sep); }
   .scale-meta { font-size: 10px; color: var(--gray); letter-spacing: 0.06em; }
   .scale-token { font-size: 10px; font-family: 'SF Mono', 'Fira Code', monospace; color: var(--gray); }
   .scale-usage {
@@ -482,23 +427,8 @@
     font-size: 10px; color: var(--gray); line-height: 1.6; max-width: 720px;
   }
 
-  /* ── Footer ── */
-  footer {
-    padding: 48px var(--margin);
-    max-width: 1280px; margin: 0 auto;
-    display: flex; justify-content: space-between; align-items: center;
-    border-top: 1px solid var(--sep);
-  }
-  footer .mark {
-    font-family: var(--font-logo); font-weight: 500; font-size: 10px;
-    letter-spacing: 0.55em; text-transform: uppercase; color: var(--gray);
-  }
-  footer .meta {
-    font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gray);
-  }
-
   @media (max-width: 900px) {
-    .page, .cover-inner, footer, .toc-inner { padding-left: 32px; padding-right: 32px; }
+    .page, .cover-inner { padding-left: 32px; padding-right: 32px; }
     .typeface-grid { grid-template-columns: 1fr; gap: 2px; }
     .primary-row, .weight-strip { grid-template-columns: 1fr 1fr; }
     .scale-row { grid-template-columns: 1fr; }
@@ -507,35 +437,11 @@
   }
 
   @media print {
-    .toc-strip { display: none; }
     .section { break-inside: avoid; }
   }
 </style>
 </head>
 <body>
-
-<!-- TOC -->
-<div class="toc-strip">
-  <div class="toc-inner">
-    <span class="toc-mark">PREFALL</span>
-    <a href="#typefaces">01 Typefaces</a>
-    <a href="#scale">02 Type scale</a>
-    <a href="#colour">03 Colour</a>
-    <a href="#weights">04 Weight system</a>
-    <a href="#usage">05 In-context usage</a>
-    <a href="#letter-spacing">06 Letter-spacing</a>
-    <a href="#line-height">07 Line-height</a>
-    <a href="#buttons">08 Buttons</a>
-    <a href="#rules">09 Do / Don&rsquo;t</a>
-    <a href="#tokens">10 CSS tokens</a>
-    <a href="#accent">11 Violet accent</a>
-    <a href="#themes">12 Theme colours</a>
-    <a href="#tonal">13 Tonal ranges</a>
-    <a href="#opacity">14 Fill opacity</a>
-    <a href="#status">15 Status</a>
-    <a href="#contact">16 Contact</a>
-  </div>
-</div>
 
 <!-- Cover -->
 <section class="cover">
@@ -557,11 +463,6 @@
 </section>
 
 <div class="page">
-
-  <header class="doc-header">
-    <div class="doc-title">Prefall</div>
-    <div class="doc-meta">Visual System &nbsp;/&nbsp; v1.1 &nbsp;/&nbsp; 2026</div>
-  </header>
 
   <!-- 01 TYPEFACES -->
   <section class="section" id="typefaces">
@@ -1322,11 +1223,6 @@
   </section>
 
 </div>
-
-<footer>
-  <span class="mark">PREFALL</span>
-  <span class="meta">Visual System &nbsp;/&nbsp; Design Language v1.1</span>
-</footer>
 
 </body>
 </html>
