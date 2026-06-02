@@ -15,10 +15,30 @@ type Data = {
   jobs: any[]
 }
 
+// Metadata explicitly overrides ALL OG fields. Without this the page
+// inherits openGraph.title / og:description from the root layout (the
+// home hero copy), which makes LinkedIn previews look identical to the
+// homepage even though the og:image is the jobs creative.
+const TITLE = 'Sustainability roles in fashion'
+const DESCRIPTION =
+  'A weekly edit of curated openings at the brands and houses shaping the next season — ESG, regulation, circularity, supply chain.'
+
 export const metadata: Metadata = {
-  title: 'Jobs — Prefall',
-  description:
-    'Open positions in sustainability, ESG, circularity, regulation, and impact functions across fashion.',
+  title: TITLE,
+  description: DESCRIPTION,
+  alternates: {canonical: 'https://pre-fall.com/jobs'},
+  openGraph: {
+    type: 'website',
+    url: 'https://pre-fall.com/jobs',
+    title: TITLE,
+    description: DESCRIPTION,
+    siteName: 'Prefall',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: TITLE,
+    description: DESCRIPTION,
+  },
 }
 
 export default async function JobsPage() {
