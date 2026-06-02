@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1240, initial-scale=1">
+<title>Prefall · Visual System 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800&family=Unbounded:wght@500&family=Playfair+Display:ital,wght@1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --surface: #FEFEFD;
+    --ink: #282828;
+    --gray: #6B6B6B;
+    --accent: #8B5CF6;
+    --sep: rgba(0,0,0,0.08);
+    --dim: rgba(0,0,0,0.62);
+    --font: 'Figtree', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, sans-serif;
+    --font-logo: 'Unbounded', sans-serif;
+    --font-accent: 'Playfair Display', serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font);
+    background: var(--surface);
+    color: var(--ink);
+    font-weight: 400;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  .page {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 80px 60px;
+    border-bottom: 1px solid var(--sep);
+  }
+  .page:last-child { border-bottom: none; }
+
+  /* Chrome */
+  .chrome {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--sep);
+    margin-bottom: 60px;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gray);
+  }
+  .chrome .mark { font-family: var(--font-logo); font-weight: 500; color: var(--ink); letter-spacing: 0.4em; }
+
+  .eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .eyebrow.gray { color: var(--gray); font-weight: 500; }
+  .rule {
+    width: 64px; height: 1.5px; background: var(--accent);
+    margin: 0 0 32px;
+  }
+
+  /* COVER */
+  .cover {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 60px;
+    max-width: 1140px;
+    margin: 0 auto;
+    border-bottom: 1px solid var(--sep);
+  }
+  .cover-top {
+    display: flex; justify-content: space-between;
+    font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gray);
+  }
+  .cover-center {
+    flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center;
+  }
+  .cover-wordmark {
+    font-family: var(--font-logo);
+    font-weight: 500;
+    letter-spacing: 0.36em;
+    font-size: clamp(60px, 11vw, 130px);
+    color: var(--ink);
+    text-align: center;
+  }
+  .cover-rule { width: 60px; height: 2px; background: var(--accent); margin: 32px 0 24px; }
+  .cover-sub {
+    color: var(--gray); font-size: 13px; letter-spacing: 0.06em; text-align: center;
+  }
+  .cover-foot {
+    display: flex; justify-content: space-between;
+    font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gray);
+  }
+
+  /* Brand essence */
+  .essence-hero {
+    font-family: var(--font);
+    font-size: clamp(40px, 5.6vw, 76px);
+    font-weight: 400;
+    line-height: 1.0;
+    letter-spacing: -0.035em;
+    color: var(--ink);
+    margin-bottom: 48px;
+    max-width: 920px;
+  }
+  .essence-hero em { font-family: var(--font-accent); font-weight: 400; font-style: italic; color: var(--accent); }
+  .essence-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 64px;
+  }
+  .essence-body { font-size: 16px; line-height: 1.65; color: var(--ink); max-width: 540px; }
+  .tag-stack { display: flex; flex-direction: column; gap: 18px; }
+  .tag {
+    font-size: 14px; line-height: 1.4; color: var(--ink);
+    padding-left: 16px; border-left: 2px solid var(--accent);
+  }
+
+  /* Wordmark */
+  .wordmark-display {
+    font-family: var(--font-logo); font-weight: 500;
+    font-size: 96px; letter-spacing: 0.4em;
+    color: var(--ink);
+    margin: 40px 0 60px;
+  }
+  .wordmark-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    padding: 32px 0;
+    border-top: 1px solid var(--sep);
+    border-bottom: 1px solid var(--sep);
+    margin-bottom: 48px;
+  }
+  .wordmark-cell { display: flex; flex-direction: column; gap: 14px; }
+  .wordmark-cell .lbl { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gray); }
+  .wordmark-cell .mark { font-family: var(--font-logo); font-weight: 500; color: var(--ink); }
+  .wm-24 { font-size: 24px; letter-spacing: 0.4em; }
+  .wm-16 { font-size: 16px; letter-spacing: 0.4em; }
+  .wm-11 { font-size: 11px; letter-spacing: 0.32em; }
+  .rules ul { list-style: none; padding: 0; }
+  .rules li { font-size: 14px; line-height: 1.65; padding-left: 22px; position: relative; margin-bottom: 12px; }
+  .rules li::before { content: '—'; color: var(--accent); position: absolute; left: 0; top: 0; font-weight: 600; }
+
+  /* Colour palettes */
+  .palette-h {
+    font-size: 22px; font-weight: 400; line-height: 1.4;
+    color: var(--ink); margin-bottom: 48px; max-width: 740px;
+  }
+  .swatch-row {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    align-items: stretch;
+    gap: 0;
+    border-bottom: 1px solid var(--sep);
+  }
+  .swatch-row:first-of-type { border-top: 1px solid var(--sep); }
+  .swatch-meta { padding: 28px 32px 28px 0; display: flex; flex-direction: column; justify-content: center; gap: 10px; }
+  .swatch-name { font-size: 14px; font-weight: 600; color: var(--ink); letter-spacing: -0.005em; }
+  .swatch-base { font-size: 12px; color: var(--gray); font-variant-numeric: tabular-nums; }
+  .swatch-use { font-size: 11px; color: var(--gray); line-height: 1.5; max-width: 170px; }
+  .swatch-strip { display: grid; grid-template-columns: repeat(11, 1fr); border-left: 1px solid var(--sep); }
+  .swatch-cell {
+    aspect-ratio: 1 / 1.2;
+    display: flex; align-items: flex-end; justify-content: flex-start;
+    padding: 10px 8px;
+    font-size: 9px;
+    font-family: var(--font);
+    color: var(--ink);
+    border-right: 1px solid rgba(0,0,0,0.04);
+    position: relative;
+  }
+  .swatch-cell .step { opacity: 0.7; font-variant-numeric: tabular-nums; }
+  .swatch-cell.dark { color: var(--surface); }
+  .swatch-cell.dark .step { opacity: 0.85; }
+
+  /* Typography */
+  .type-h {
+    font-family: var(--font);
+    font-weight: 400;
+    font-size: 96px;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    color: var(--ink);
+    margin-bottom: 24px;
+  }
+  .type-h.unbounded { font-family: var(--font-logo); font-weight: 500; letter-spacing: -0.01em; font-size: 76px; }
+  .type-h.playfair { font-family: var(--font-accent); font-style: italic; font-weight: 400; letter-spacing: -0.02em; }
+  .type-meta {
+    font-size: 13px; color: var(--gray);
+    margin-bottom: 8px;
+  }
+  .type-meta strong { color: var(--ink); font-weight: 600; }
+  .type-note { font-size: 13px; color: var(--gray); margin-bottom: 32px; max-width: 540px; line-height: 1.55; }
+
+  .scale-row {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 24px;
+    padding: 24px 0;
+    border-top: 1px solid var(--sep);
+    align-items: baseline;
+  }
+  .scale-row .lbl {
+    font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gray);
+    font-variant-numeric: tabular-nums;
+  }
+  .scale-row .specimen { font-family: var(--font); font-weight: 400; color: var(--ink); }
+  .specimen.uppercase { text-transform: uppercase; letter-spacing: 0.18em; font-weight: 500; }
+
+  .type-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 60px;
+    padding-top: 40px;
+  }
+  .type-grid > div { border-top: 2px solid var(--ink); padding-top: 32px; }
+
+  /* Principles */
+  .principles-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 64px;
+  }
+  .principles-grid h3 {
+    font-size: 12px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent);
+    margin-bottom: 24px; font-weight: 600;
+  }
+  .principle {
+    border-top: 1px solid var(--sep);
+    padding: 18px 0;
+  }
+  .principle .k {
+    font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--gray); margin-bottom: 6px; font-weight: 500;
+  }
+  .principle .v { font-size: 14px; color: var(--ink); line-height: 1.55; }
+
+  /* Voice / banned */
+  .voice ul { list-style: none; padding: 0; }
+  .voice li {
+    font-size: 14px; line-height: 1.7; padding-left: 22px; position: relative;
+    border-top: 1px solid var(--sep); padding: 14px 0 14px 22px;
+  }
+  .voice li::before { content: '—'; color: var(--accent); position: absolute; left: 0; top: 14px; font-weight: 600; }
+  .voice li:first-child { border-top: none; }
+  .voice li strong { color: var(--ink); font-weight: 600; }
+  .banned { color: var(--gray); font-style: italic; }
+
+  /* Applications */
+  .app-row {
+    display: grid; grid-template-columns: 140px 1fr; gap: 28px;
+    padding: 24px 0; border-top: 1px solid var(--sep);
+  }
+  .app-row:first-child { border-top: 1px solid var(--sep); }
+  .app-row .k { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+  .app-row .v { font-size: 14px; color: var(--ink); line-height: 1.6; }
+
+  /* Contact */
+  .contact { padding-top: 80px; }
+  .contact-line {
+    width: 80px; height: 1.5px; background: var(--accent); margin-bottom: 24px;
+  }
+  .contact .lines {
+    font-size: 16px; color: var(--ink); line-height: 1.8;
+  }
+  .contact .lines a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--sep); }
+
+  .colophon {
+    margin-top: 96px; padding-top: 24px; border-top: 1px solid var(--sep);
+    font-size: 10px; color: var(--gray); line-height: 1.55; max-width: 680px;
+  }
+
+  /* TOC */
+  .toc-strip {
+    position: sticky; top: 0;
+    background: var(--surface); z-index: 10;
+    padding: 14px 0; border-bottom: 1px solid var(--sep);
+    margin-bottom: 0;
+  }
+  .toc-inner { max-width: 1140px; margin: 0 auto; padding: 0 60px; display: flex; gap: 28px; flex-wrap: wrap; }
+  .toc-strip a { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gray); text-decoration: none; }
+  .toc-strip a:hover { color: var(--ink); }
+  .toc-mark { font-family: var(--font-logo); font-weight: 500; letter-spacing: 0.4em; color: var(--ink); font-size: 11px; }
+
+  @media (max-width: 800px) {
+    .page { padding: 60px 32px; }
+    .cover { padding: 40px 32px; }
+    .essence-grid, .type-grid, .principles-grid { grid-template-columns: 1fr; gap: 40px; }
+    .swatch-row { grid-template-columns: 1fr; }
+    .swatch-strip { border-left: none; border-top: 1px solid var(--sep); }
+    .scale-row { grid-template-columns: 1fr; }
+  }
+
+  @media print {
+    .toc-strip { display: none; }
+    .page, .cover { page-break-inside: avoid; min-height: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOC -->
+<div class="toc-strip">
+  <div class="toc-inner">
+    <span class="toc-mark">PREFALL</span>
+    <a href="#essence">01 Essence</a>
+    <a href="#wordmark">02 Wordmark</a>
+    <a href="#colour-primary">03 Colour · Primary</a>
+    <a href="#colour-accent">04 Colour · Accents</a>
+    <a href="#typography">05 Typography</a>
+    <a href="#principles">06 Principles</a>
+    <a href="#applications">07 Applications</a>
+    <a href="#contact">08 Contact</a>
+  </div>
+</div>
+
+<!-- COVER -->
+<section class="cover">
+  <div class="cover-top">
+    <span>VISUAL SYSTEM</span>
+    <span>2026 EDITION</span>
+  </div>
+  <div class="cover-center">
+    <div class="cover-wordmark">PREFALL</div>
+    <div class="cover-rule"></div>
+    <div class="cover-sub">Editorial intelligence on sustainable fashion economics</div>
+  </div>
+  <div class="cover-foot">
+    <span>PRE-FALL.COM</span>
+    <span>BRAND GUIDELINES · v.1.0</span>
+  </div>
+</section>
+
+<!-- 01 BRAND ESSENCE -->
+<section class="page" id="essence">
+  <div class="chrome">
+    <span>01 · Brand essence</span>
+    <span class="mark">PREFALL</span>
+  </div>
+  <div class="eyebrow">Positioning</div>
+  <div class="rule"></div>
+  <h1 class="essence-hero">The business behind <em>the next season</em> of fashion.</h1>
+  <div class="essence-grid">
+    <p class="essence-body">
+      Prefall is editorial intelligence on the economics of sustainable fashion. We analyse where
+      business models, regulation, and consumer behaviour intersect — and where they do not.
+      Restrained, evidence-driven, written for industry insiders.
+    </p>
+    <div class="tag-stack">
+      <div class="eyebrow gray" style="margin-bottom: 4px;">Tagline alternatives</div>
+      <div class="tag">The business behind the next season of fashion.</div>
+      <div class="tag">Editorial intelligence on sustainable fashion economics.</div>
+      <div class="tag">Where fashion economics meet sustainability reality.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 02 WORDMARK -->
+<section class="page" id="wordmark">
+  <div class="chrome">
+    <span>02 · Wordmark</span>
+    <span class="mark">PREFALL</span>
+  </div>
+  <div class="eyebrow">Wordmark</div>
+  <div class="rule"></div>
+  <p class="palette-h" style="margin-bottom: 32px;">PREFALL is the only mark. No symbol, no monogram.</p>
+  <div class="wordmark-display">PREFALL</div>
+
+  <div class="wordmark-row">
+    <div class="wordmark-cell">
+      <span class="lbl">Header · 24 pt</span>
+      <span class="mark wm-24">PREFALL</span>
+    </div>
+    <div class="wordmark-cell">
+      <span class="lbl">Footer · 16 pt</span>
+      <span class="mark wm-16">PREFALL</span>
+    </div>
+    <div class="wordmark-cell">
+      <span class="lbl">Caption · 11 pt</span>
+      <span class="mark wm-11">PREFALL</span>
+    </div>
+  </div>
+
+  <div class="eyebrow gray" style="margin-bottom: 16px;">Rules</div>
+  <div class="rules">
+    <ul>
+      <li>Set in <strong>Unbounded 500</strong>. Letter-spacing 0.4em at 24pt and above.</li>
+      <li>Always all-caps. Never set as &ldquo;Prefall&rdquo; in lowercase.</li>
+      <li>Minimum size for print: 9pt. Minimum digital: 14px.</li>
+      <li>Clear space around the mark equals the cap height of the letterforms.</li>
+      <li>On dark backgrounds: surface white (#FEFEFD). On light: ink (#282828).</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 03 PRIMARY COLOUR -->
+<section class="page" id="colour-primary">
+  <div class="chrome">
+    <span>03 · Colour · Primary palette</span>
+    <span class="mark">PREFALL</span>
+  </div>
+  <div class="eyebrow">Primary palette</div>
+  <div class="rule"></div>
+  <p class="palette-h">Four colours that carry every page. Surface and ink for everything. Gray for hierarchy. Accent purple, reserved.</p>
+
+  <div id="primary-swatches"></div>
+</section>
+
+<!-- 04 EDITORIAL ACCENT COLOUR -->
+<section class="page" id="colour-accent">
+  <div class="chrome">
+    <span>04 · Colour · Editorial accents</span>
+    <span class="mark">PREFALL</span>
+  </div>
+  <div class="eyebrow">Editorial accent set</div>
+  <div class="rule"></div>
+  <p class="palette-h">Five colours that code the regulatory themes in the cartography tracker. Used sparingly elsewhere — typically only as the base shade (500), with lighter tints (50–200) for backgrounds and darker shades (700–900) for text on those tints.</p>
+
+  <div id="accent-swatches"></div>
+</section>
+
+<!-- 05 TYPOGRAPHY -->
+<section class="page" id="typography">
+  <div class="chrome">
+    <span>05 · Typography</span>
+    <span class="mark">PREFALL</span>
+  </div>
+  <div class="eyebrow">Primary typeface</div>
+  <div class="rule"></div>
+  <h2 class="type-h">Figtree</h2>
+  <p class="type-meta"><strong>Weights:</strong> 300 Light · 400 Regular · 500 Medium · 600 SemiBold · 700 Bold · 800 ExtraBold</p>
+  <p class="type-note">Used for body, headings, eyebrows, navigation — every set of words except the PREFALL wordmark and the rare Playfair italic.</p>
+
+  <div class="scale-row">
+    <span class="lbl">Hero · 76 pt</span>
+    <span class="specimen" style="font-size: 64px; letter-spacing: -0.03em; line-height: 1.0;">The business behind the next season.</span>
+  </div>
+  <div class="scale-row">
+    <span class="lbl">Display · 48 pt</span>
+    <span class="specimen" style="font-size: 40px; letter-spacing: -0.022em; line-height: 1.05;">Where fashion economics meet sustainability reality.</span>
+  </div>
+  <div class="scale-row">
+    <span class="lbl">Article · 32 pt</span>
+    <span class="specimen" style="font-size: 28px; letter-spacing: -0.018em; line-height: 1.15; font-weight: 400;">Why Europe&rsquo;s fashion regulation isn&rsquo;t shifting the market.</span>
+  </div>
+  <div class="scale-row">
+    <span class="lbl">H2 · 24 pt</span>
+    <span class="specimen" style="font-size: 22px; line-height: 1.3; font-weight: 600;">Key economic implications</span>
+  </div>
+  <div class="scale-row">
+    <span class="lbl">Body · 16 pt</span>
+    <span class="specimen" style="font-size: 16px; line-height: 1.6; max-width: 720px;">Independent editorial intelligence on the business of fashion and its sustainability transition. We work with named sources, audited reports, and live regulatory texts — never marketing claims.</span>
+  </div>
+  <div class="scale-row">
+    <span class="lbl">Nav · 14 pt</span>
+    <span class="specimen" style="font-size: 14px;">Articles · Regulation · Companies · Value chain · Jobs</span>
+  </div>
+  <div class="scale-row">
+    <span class="lbl">Small · 12 pt</span>
+    <span class="specimen" style="font-size: 12px; color: var(--gray);">Published 29 May 2026 · 12 min read · Editorial</span>
+  </div>
+  <div class="scale-row">
+    <span class="lbl">Eyebrow · 11 pt</span>
+    <span class="specimen uppercase" style="font-size: 11px; color: var(--gray);">Reading now · Updated weekly</span>
+  </div>
+
+  <div class="type-grid">
+    <div>
+      <div class="eyebrow gray">Display typeface</div>
+      <h3 class="type-h unbounded">Unbounded</h3>
+      <p class="type-meta"><strong>Weight 500 only</strong> · Letter-spacing 0.4em at 24pt+</p>
+      <p class="type-note">Reserved exclusively for the PREFALL wordmark. Never set body text or headings in Unbounded.</p>
+      <div style="font-family: var(--font-logo); font-weight: 500; font-size: 48px; letter-spacing: 0.4em; color: var(--ink); margin-top: 16px;">PREFALL</div>
+    </div>
+    <div>
+      <div class="eyebrow gray">Accent italic</div>
+      <h3 class="type-h playfair" style="font-size: 64px;">Playfair</h3>
+      <p class="type-meta"><strong>Italic 400 · 500</strong> · Used very sparingly</p>
+      <p class="type-note">Single-word emphasis inside body. Typically one word per article — never a phrase. Reserved for moments of editorial voice.</p>
+      <div style="font-family: var(--font); font-weight: 400; font-size: 32px; letter-spacing: -0.02em; color: var(--ink); margin-top: 16px; line-height: 1.2;">the business of <span style="font-family: var(--font-accent); font-style: italic; color: var(--accent);">fashion&rsquo;s</span> next chapter.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 06 PRINCIPLES -->
+<section class="page" id="principles">
+  <div class="chrome">
+    <span>06 · Type principles &amp; voice</span>
+    <span class="mark">PREFALL</span>
+  </div>
+  <div class="eyebrow">Principles</div>
+  <div class="rule"></div>
+
+  <div class="principles-grid">
+    <div>
+      <h3>Type principles</h3>
+      <div class="principle"><div class="k">Headlines</div><div class="v">Figtree 400. Letter-spacing tight (-0.02em to -0.06em). Line-height 1.0&ndash;1.15.</div></div>
+      <div class="principle"><div class="k">Body</div><div class="v">Figtree 400. Line-height 1.55&ndash;1.65. Justified with hyphens on long-form.</div></div>
+      <div class="principle"><div class="k">Eyebrows / labels</div><div class="v">Figtree 400&ndash;500, uppercase. Letter-spacing 0.18em. 11&ndash;12pt.</div></div>
+      <div class="principle"><div class="k">Alignment</div><div class="v">Body left-aligned (justified on long-form). Centre is reserved for the home hero and CTAs.</div></div>
+      <div class="principle"><div class="k">Quotation marks</div><div class="v">Always curly: &ldquo; &rdquo; and &lsquo; &rsquo;. Never straight quotes.</div></div>
+      <div class="principle"><div class="k">Em dash</div><div class="v">Use &mdash; (with spaces around it) for parentheticals. Never -- or - -.</div></div>
+    </div>
+    <div class="voice">
+      <h3>Editorial voice</h3>
+      <ul>
+        <li><strong>UK English</strong> spelling — analyse, behaviour, organisation, programme.</li>
+        <li><strong>Industry-insider register.</strong> Assume the reader knows what CSRD, ESPR, scope 3 mean.</li>
+        <li><strong>Specific over general.</strong> Use numbers, dates, named regulations, named brands.</li>
+        <li><strong>No marketing fluff.</strong> <span class="banned">Banned: transform, revolution, game-changer, leverage, disrupt.</span></li>
+        <li><strong>Each claim earns its place</strong> with a primary source — regulation text, audited report, press release.</li>
+        <li><strong>Short headlines.</strong> Long-form articles can run 1,500&ndash;3,000 words when the analysis warrants it.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 07 APPLICATIONS -->
+<section class="page" id="applications">
+  <div class="chrome">
+    <span>07 · Applications</span>
+    <span class="mark">PREFALL</span>
+  </div>
+  <div class="eyebrow">Where the system lives</div>
+  <div class="rule"></div>
+
+  <div class="app-row"><div class="k">Web</div><div class="v">pre-fall.com — primary surface. Editorial articles, regulation tracker, value-chain map, jobs board.</div></div>
+  <div class="app-row"><div class="k">Newsletter</div><div class="v">prefall.substack.com — Substack delivery. Headlines set in Figtree, accent italics in Playfair.</div></div>
+  <div class="app-row"><div class="k">Social</div><div class="v">LinkedIn posts use the same wordmark + accent system. Carousels use the editorial accent set for theme coding.</div></div>
+  <div class="app-row"><div class="k">Email signature</div><div class="v">Plain text. Name · role · pre-fall.com · contact@pre-fall.com. No images, no logo file.</div></div>
+</section>
+
+<!-- 08 CONTACT -->
+<section class="page" id="contact">
+  <div class="chrome">
+    <span>08 · Contact</span>
+    <span class="mark">PREFALL</span>
+  </div>
+  <div class="eyebrow">Contact</div>
+  <div class="rule"></div>
+
+  <div class="contact" style="padding-top: 24px;">
+    <div class="contact-line"></div>
+    <div class="lines">
+      Ana Maria Claros<br>
+      <a href="mailto:contact@pre-fall.com">contact@pre-fall.com</a><br>
+      <a href="https://pre-fall.com">pre-fall.com</a><br>
+      <a href="https://prefall.substack.com">prefall.substack.com</a>
+    </div>
+  </div>
+
+  <div class="colophon">
+    <strong>Colophon.</strong> Visual system v.1.0 · 2026. Type-set with Figtree, Unbounded and Playfair Display (Google Fonts). Tonal scales generated by HSL lightness adjustment from the base shade (500). To export as PDF, open in Chrome and File &rarr; Print &rarr; Save as PDF (A4, no margins, background graphics on).
+  </div>
+</section>
+
+<script>
+// ──────────────────────────────────────────────────────────────────────
+// Tonal-scale generator. For each base hex (the "500" step), we compute
+// 11 shades (50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950).
+// The math: convert to HSL, then walk L (lightness) up for lighter steps
+// and down for darker ones. We also pull S slightly toward gray on the
+// very pale end so tints feel washed rather than candy-coloured.
+// ──────────────────────────────────────────────────────────────────────
+
+function hexToRgb(hex) {
+  hex = hex.replace('#', '');
+  if (hex.length === 3) hex = hex.split('').map(c => c+c).join('');
+  return [
+    parseInt(hex.substr(0,2),16),
+    parseInt(hex.substr(2,2),16),
+    parseInt(hex.substr(4,2),16),
+  ];
+}
+function rgbToHex(r,g,b) {
+  const h = n => Math.round(n).toString(16).padStart(2,'0');
+  return '#' + h(r) + h(g) + h(b);
+}
+function rgbToHsl([r,g,b]) {
+  r/=255; g/=255; b/=255;
+  const max=Math.max(r,g,b), min=Math.min(r,g,b);
+  let h=0, s=0; const l=(max+min)/2;
+  if (max!==min) {
+    const d=max-min;
+    s = l>0.5 ? d/(2-max-min) : d/(max+min);
+    switch(max){
+      case r: h=(g-b)/d+(g<b?6:0); break;
+      case g: h=(b-r)/d+2; break;
+      case b: h=(r-g)/d+4; break;
+    }
+    h/=6;
+  }
+  return [h*360, s, l];
+}
+function hslToRgb([h,s,l]) {
+  h/=360;
+  let r,g,b;
+  if (s===0){ r=g=b=l; }
+  else {
+    const hue2rgb = (p,q,t) => {
+      if(t<0) t+=1; if(t>1) t-=1;
+      if(t<1/6) return p+(q-p)*6*t;
+      if(t<1/2) return q;
+      if(t<2/3) return p+(q-p)*(2/3-t)*6;
+      return p;
+    };
+    const q = l<0.5 ? l*(1+s) : l+s-l*s;
+    const p = 2*l-q;
+    r = hue2rgb(p,q,h+1/3);
+    g = hue2rgb(p,q,h);
+    b = hue2rgb(p,q,h-1/3);
+  }
+  return [r*255, g*255, b*255];
+}
+function clamp(x,a,b){ return Math.max(a,Math.min(b,x)); }
+
+// Targets for the 11-step scale in HSL lightness, with saturation
+// modulation. Pale steps pull S down toward gray; deep steps keep S.
+const STEPS = [
+  {step: 50,  l: 0.975, sMul: 0.30},
+  {step: 100, l: 0.94,  sMul: 0.40},
+  {step: 200, l: 0.86,  sMul: 0.55},
+  {step: 300, l: 0.76,  sMul: 0.70},
+  {step: 400, l: 0.64,  sMul: 0.88},
+  {step: 500, l: null,  sMul: 1.0},   // base — use the original color verbatim
+  {step: 600, l: 0.82,  sMul: 1.0, fromBase: true},  // 82% of base L
+  {step: 700, l: 0.66,  sMul: 1.0, fromBase: true},
+  {step: 800, l: 0.50,  sMul: 1.0, fromBase: true},
+  {step: 900, l: 0.36,  sMul: 1.0, fromBase: true},
+  {step: 950, l: 0.22,  sMul: 1.0, fromBase: true},
+];
+
+function makeScale(baseHex) {
+  const [h,s,l] = rgbToHsl(hexToRgb(baseHex));
+  return STEPS.map(stepDef => {
+    let newS, newL;
+    if (stepDef.step === 500) {
+      return {step: 500, hex: baseHex};
+    }
+    if (stepDef.fromBase) {
+      newL = l * stepDef.l;
+      newS = s * stepDef.sMul;
+    } else {
+      newL = stepDef.l;
+      newS = s * stepDef.sMul;
+    }
+    newL = clamp(newL, 0, 1);
+    newS = clamp(newS, 0, 1);
+    const [r,g,b] = hslToRgb([h, newS, newL]);
+    return {step: stepDef.step, hex: rgbToHex(r,g,b)};
+  });
+}
+
+// Decide whether to use light or dark text on a swatch.
+function isLight(hex) {
+  const [r,g,b] = hexToRgb(hex);
+  // Perceived luminance (Rec. 709)
+  const lum = (0.2126*r + 0.7152*g + 0.0722*b) / 255;
+  return lum > 0.62;
+}
+
+function renderSwatch(target, list) {
+  const root = document.getElementById(target);
+  list.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'swatch-row';
+
+    const meta = document.createElement('div');
+    meta.className = 'swatch-meta';
+    meta.innerHTML = `
+      <div class="swatch-name">${item.name}</div>
+      <div class="swatch-base">${item.base}</div>
+      ${item.use ? `<div class="swatch-use">${item.use}</div>` : ''}
+    `;
+    row.appendChild(meta);
+
+    const strip = document.createElement('div');
+    strip.className = 'swatch-strip';
+    const scale = makeScale(item.base);
+    scale.forEach(s => {
+      const cell = document.createElement('div');
+      cell.className = 'swatch-cell' + (isLight(s.hex) ? '' : ' dark');
+      cell.style.background = s.hex;
+      cell.innerHTML = `<span><strong>${s.step}</strong><br><span class="step">${s.hex.toUpperCase()}</span></span>`;
+      strip.appendChild(cell);
+    });
+    row.appendChild(strip);
+
+    root.appendChild(row);
+  });
+}
+
+renderSwatch('primary-swatches', [
+  {name: 'Ink',     base: '#282828', use: 'All body and display text. Near-black.'},
+  {name: 'Gray',    base: '#6B6B6B', use: 'Eyebrows, captions, secondary copy.'},
+  {name: 'Accent',  base: '#8B5CF6', use: 'Emphasis only. ≤5% of any layout.'},
+  {name: 'Surface', base: '#FEFEFD', use: 'Page background. The negative space.'},
+]);
+
+renderSwatch('accent-swatches', [
+  {name: 'Transparency',   base: '#8B5CF6', use: 'CSRD, ESRS, DPP, France score, textile label.'},
+  {name: 'Greenwashing',   base: '#0891B2', use: 'ECGT, Green Claims Directive.'},
+  {name: 'Supply chain',   base: '#D97706', use: 'CSDDD, EUDR.'},
+  {name: 'Product design', base: '#059669', use: 'ESPR, Italy bill.'},
+  {name: 'Waste',          base: '#DC2626', use: 'Textile EPR, PPWR, CA SB 707.'},
+]);
+</script>
+
+</body>
+</html>

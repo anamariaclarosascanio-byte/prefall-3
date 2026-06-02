@@ -9,6 +9,11 @@
  *
  * Style: matches the brand chrome — off-white surface (#FEFEFD), ink
  * dark text (#282828), purple accent (#8B5CF6), large editorial type.
+ *
+ * Satori notes (the renderer @vercel/og uses):
+ *   • every div MUST have display:flex (no block/inline-block)
+ *   • <br /> is not supported — use stacked divs in flex columns
+ *   • emoji/icons need to be installed manually, so we use plain text
  */
 import {ImageResponse} from 'next/og'
 
@@ -30,10 +35,9 @@ export default async function Image() {
           padding: '56px 72px',
           fontFamily: 'system-ui, -apple-system, sans-serif',
           color: '#282828',
-          position: 'relative',
         }}
       >
-        {/* Top bar — wordmark + eyebrow */}
+        {/* Top chrome: wordmark + eyebrow */}
         <div
           style={{
             display: 'flex',
@@ -45,60 +49,65 @@ export default async function Image() {
             color: '#6b6b6b',
           }}
         >
-          <span style={{color: '#282828', letterSpacing: '0.4em'}}>PREFALL</span>
-          <span>Job board · Updated weekly</span>
+          <div style={{display: 'flex', color: '#282828', letterSpacing: '0.4em'}}>
+            PREFALL
+          </div>
+          <div style={{display: 'flex'}}>Job board · Updated weekly</div>
         </div>
 
-        {/* Headline — vertically centered */}
+        {/* Headline block (vertically centered via flex:1) */}
         <div
           style={{
             display: 'flex',
             flexDirection: 'column',
             flex: 1,
             justifyContent: 'center',
-            gap: 28,
-            maxWidth: 1000,
+            paddingTop: 12,
+            paddingBottom: 12,
           }}
         >
           <div
             style={{
+              display: 'flex',
               fontSize: 18,
               letterSpacing: '0.18em',
               textTransform: 'uppercase',
               color: '#8B5CF6',
               fontWeight: 600,
+              marginBottom: 28,
             }}
           >
-            ↗ Now hiring
+            Now hiring
           </div>
           <div
             style={{
+              display: 'flex',
               fontSize: 96,
               lineHeight: 1.0,
               letterSpacing: '-0.035em',
               fontWeight: 400,
+              maxWidth: 980,
             }}
           >
-            Sustainability roles
-            <br />
-            in fashion.
+            Sustainability roles in fashion.
           </div>
           <div
             style={{
+              display: 'flex',
               fontSize: 26,
               lineHeight: 1.4,
-              color: 'rgba(0,0,0,0.62)',
-              maxWidth: 820,
+              color: '#6b6b6b',
+              maxWidth: 880,
               fontWeight: 400,
+              marginTop: 32,
             }}
           >
-            Curated openings at the brands and houses shaping the
-            <br />
-            next season — ESG, regulation, circularity, supply chain.
+            Curated openings at the brands and houses shaping the next
+            season — ESG, regulation, circularity, supply chain.
           </div>
         </div>
 
-        {/* Bottom — accent bar + URL */}
+        {/* Bottom: accent rule + URL */}
         <div
           style={{
             display: 'flex',
@@ -111,14 +120,19 @@ export default async function Image() {
           <div style={{display: 'flex', alignItems: 'center', gap: 16}}>
             <div
               style={{
+                display: 'flex',
                 width: 64,
                 height: 2,
                 background: '#8B5CF6',
               }}
             />
-            <span>Editorial intelligence on sustainable fashion</span>
+            <div style={{display: 'flex'}}>
+              Editorial intelligence on sustainable fashion
+            </div>
           </div>
-          <span style={{fontWeight: 600, color: '#282828'}}>pre-fall.com/jobs</span>
+          <div style={{display: 'flex', fontWeight: 600, color: '#282828'}}>
+            pre-fall.com/jobs
+          </div>
         </div>
       </div>
     ),
