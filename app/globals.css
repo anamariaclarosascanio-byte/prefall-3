@@ -2914,9 +2914,12 @@ html.scroll-fade-ready [data-text-fade].is-revealed {
   justify-content: center;
   gap: 18px;
   margin-top: 48px;
-  padding-top: 28px;
-  border-top: 1px solid var(--sep);
 }
+/* Remove the divider lines that frame the job list edges (Ana Maria's spec):
+   no border above the first job, no border below the last job, no border
+   above the paginator. The inter-job dividers remain — only the edges go. */
+#view-jobs .job-item:first-child { border-top: none; }
+#view-jobs .job-item:last-child  { border-bottom: none; }
 .jobs-pagination__pages {
   display: flex;
   align-items: center;
@@ -2954,7 +2957,6 @@ html.scroll-fade-ready [data-text-fade].is-revealed {
   .jobs-pagination {
     gap: 8px;
     margin-top: 32px;
-    padding-top: 22px;
   }
   .jobs-pagination__btn { padding: 4px 6px; }
 }
