@@ -2890,6 +2890,76 @@ html.scroll-fade-ready [data-text-fade].is-revealed {
 }
 
 /* ============================================================
+   JOBS — results bar (count + sort) and paginator.
+   Sits between the filter stack and the job grid; the paginator
+   sits below the grid. Reuses .sort-bar / .sort-btn from the
+   companies/articles toolbar so the sort affordance reads as
+   the same control across the site.
+============================================================ */
+.jobs-results-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 4px 0 20px;
+}
+.jobs-results-bar__count {
+  font-size: var(--t-small);
+  color: var(--gray);
+}
+
+.jobs-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin-top: 48px;
+  padding-top: 28px;
+  border-top: 1px solid var(--sep);
+}
+.jobs-pagination__pages {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.jobs-pagination__btn {
+  font-family: var(--font);
+  font-size: var(--t-small);
+  font-weight: 400;
+  background: none;
+  border: 0;
+  color: var(--gray);
+  cursor: pointer;
+  padding: 4px 8px;
+  transition: color 0.2s;
+}
+.jobs-pagination__btn:hover:not(:disabled) { color: var(--ink); }
+.jobs-pagination__btn:disabled { opacity: 0.35; cursor: default; }
+.jobs-pagination__btn.is-active { color: var(--ink); }
+.jobs-pagination__page { min-width: 24px; text-align: center; }
+.jobs-pagination__sep {
+  font-size: var(--t-small);
+  color: var(--gray);
+  opacity: 0.5;
+  padding: 0 2px;
+  user-select: none;
+}
+
+@media (max-width: 768px) {
+  .jobs-results-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .jobs-pagination {
+    gap: 8px;
+    margin-top: 32px;
+    padding-top: 22px;
+  }
+  .jobs-pagination__btn { padding: 4px 6px; }
+}
+
+/* ============================================================
    MOBILE: justify body text (excludes titles, eyebrows, graphics).
    Per Ana Maria's spec — mobile-only, applied to every page.
 ============================================================ */
