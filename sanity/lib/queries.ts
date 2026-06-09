@@ -171,7 +171,7 @@ export const companiesIndexQuery = groq`{
   },
   "settings": *[_id == "siteSettings"][0]{logoText, emptyNodeCompaniesMessage},
   "nodes": ${nodesQuery},
-  "companies": *[_type == "company"] | order(name asc){
+  "companies": *[_type == "company"] | order(_createdAt desc){
     _id,
     name,
     "slug": slug.current,
