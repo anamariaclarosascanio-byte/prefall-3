@@ -2672,10 +2672,11 @@
 }
 
 /* Article body paragraphs: justified by default (Ana Maria's standard).
-   Excludes the lead paragraph (too short to justify well) and pullquotes. */
+   Includes the lead paragraph; excludes only dek, card titles and figcaptions. */
 .article-page__body .detail-body__prose,
 .article-page__body .article-page__text,
-.article-page__body p:not(.article-page__lead):not(.article-page__dek):not(.card__title):not(figcaption) {
+.article-page__body .article-page__lead,
+.article-page__body p:not(.article-page__dek):not(.card__title):not(figcaption) {
   text-align: justify;
   hyphens: auto;
 }
