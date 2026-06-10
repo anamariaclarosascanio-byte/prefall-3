@@ -89,7 +89,7 @@ export function HtmlEmbed({code, caption}: Props) {
   const srcdoc = buildSrcDoc(code)
 
   return (
-    <figure className="article-page__figure" style={{margin: '32px 0'}}>
+    <figure className="article-page__figure" style={{margin: '20px 0'}}>
       <iframe
         ref={iframeRef}
         key={keyTick}
