@@ -1,17 +1,20 @@
 /**
  * Home page — Server Component, fetches everything in one Sanity round-trip.
- * Composes the 5 home sections in prototype order:
- *   Hero → Reading now → Featured company → Regulation focus → Full-width
- *   image → Value chain preview.
+ * Currently the home shows ONLY the Hero (plus the shared header/footer from
+ * the layout). The other 5 sections are disabled — kept in the code, commented
+ * out below, so they can be re-enabled at any time by uncommenting them.
+ *   Hero → [disabled: Reading now → Featured company → Regulation focus →
+ *   Full-width image → Value chain preview]
  */
 import {sanityFetch} from '@/sanity/lib/fetch'
 import {homePageQuery} from '@/sanity/lib/queries'
 import {HomeHero} from '@/components/home/HomeHero'
-import {ReadingNow} from '@/components/home/ReadingNow'
-import {FeaturedCompany} from '@/components/home/FeaturedCompany'
-import {RegulationFocus} from '@/components/home/RegulationFocus'
-import {HomeFullWidthImage} from '@/components/home/HomeFullWidthImage'
-import {ValueChainPreview} from '@/components/home/ValueChainPreview'
+// --- Sections disabled (uncomment to re-enable) ---
+// import {ReadingNow} from '@/components/home/ReadingNow'
+// import {FeaturedCompany} from '@/components/home/FeaturedCompany'
+// import {RegulationFocus} from '@/components/home/RegulationFocus'
+// import {HomeFullWidthImage} from '@/components/home/HomeFullWidthImage'
+// import {ValueChainPreview} from '@/components/home/ValueChainPreview'
 
 type HomeData = {
   settings: any
@@ -41,6 +44,8 @@ export default async function HomePage() {
         secondaryCtaLabel={s.heroSecondaryCtaLabel}
       />
 
+      {/* --- Sections below are disabled. Uncomment to re-enable. ---
+
       <ReadingNow
         sectionLabel={s.readingNowSectionLabel}
         introBody={s.readingNowIntroBody}
@@ -67,6 +72,8 @@ export default async function HomePage() {
         caption={s.valueChainHeroCaption}
         nodes={data.nodes ?? []}
       />
+
+      --- end disabled sections --- */}
     </>
   )
 }
